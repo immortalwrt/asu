@@ -309,6 +309,29 @@ def build(req: dict):
             cache_workdir / ".config",
         )
 
+    if req["target"].startswith("x86/"):
+        config_path = cache_workdir / ".config"
+        config = config_path.read_text()
+
+        config = config.replace(
+            "CONFIG_ISO_IMAGES=y",
+            "# CONFIG_ISO_IMAGES is not set",
+        ).replace(
+            "CONFIG_QCOW2_IMAGES=y",
+            "# CONFIG_QCOW2_IMAGES is not set",
+        ).replace(
+            "CONFIG_VDI_IMAGES=y",
+            "# CONFIG_VDI_IMAGES is not set",
+        ).replace(
+            "CONFIG_VMDK_IMAGES=y",
+           "# CONFIG_VMDK_IMAGES is not set",
+        ).replace(
+            "CONFIG_VHDX_IMAGES=y",
+            "# CONFIG_VHDX_IMAGES is not set",
+        )
+
+        config_path.write_text(config)
+
     build_cmd = [
         "make",
         "image",
