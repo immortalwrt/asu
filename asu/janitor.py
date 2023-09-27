@@ -200,7 +200,7 @@ def update_meta_json():
         "branches": branches,
         "server": {
             "version": __version__,
-            "contact": "mail@aparcar.org",
+            "contact": "cnsztl@immortalwrt.org",
             "allow_defaults": current_app.config["ALLOW_DEFAULTS"],
         },
     }

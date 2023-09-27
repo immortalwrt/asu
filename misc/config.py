@@ -5,7 +5,7 @@ TESTING = False
 DEBUG = False
 
 # where to find the ImageBuildes
-UPSTREAM_URL = "https://downloads.openwrt.org"
+UPSTREAM_URL = "https://downloads.immortalwrt.org"
 
 # where to store created images
 STORE_PATH = Path.cwd() / "public/store/"
@@ -38,4 +38,4 @@ MAPPING_ABI = {"libubus20191227": "libubus"}
 # BRANCHES_FILE = "./branches.yml"
 
 # where to downlaod the images from
-# UPSTREAM_PATH = "https://downloads.openwrt.org"
+# UPSTREAM_PATH = "https://downloads.immortalwrt.org"
