@@ -113,6 +113,10 @@ def build(req: dict):
         repos_path = cache_workdir / "repositories.conf"
         repos = repos_path.read_text()
 
+        if req['repos_url']:
+            log.debug(f"Replacing {req['repos_url']} with {req['upstream_url']}...")
+            repos = repos.replace(req["repos_url"], req["upstream_url"])
+
         extra_repos = req["branch_data"].get("extra_repos")
         if extra_repos:
             log.debug("Found extra repos")

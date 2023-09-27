@@ -242,6 +242,7 @@ def api_v1_build_post():
         if current_app.config.get("CACHE_PATH"):
             req["cache_path"] = current_app.config.get("CACHE_PATH")
         req["upstream_url"] = current_app.config["UPSTREAM_URL"]
+        req["repos_url"] = current_app.config["REPOS_URL"]
         req["branch_data"] = current_app.config["BRANCHES"][req["branch"]]
         req["request_hash"] = request_hash
 
