@@ -386,8 +386,6 @@ def build(req: dict):
 
     log.debug("JSON content %s", json_content)
 
-    job.connection.sadd(f"builds:{version_code}:{req['target']}", req["request_hash"])
-
     job.connection.hincrby(
         "stats:builds",
         "#".join(

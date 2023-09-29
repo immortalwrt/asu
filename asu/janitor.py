@@ -109,24 +109,6 @@ def update_target_profiles(branch: dict, version: str, target: str) -> str:
 
     r.hset(f"architecture:{branch['name']}", target, metadata["arch_packages"])
 
-    queue = Queue(connection=r)
-    registry = FinishedJobRegistry(queue=queue)
-    version_code = r.get(f"revision:{version}:{target}")
-    if version_code:
-        version_code = version_code.decode()
-        for request_hash in r.smembers(f"builds:{version_code}:{target}"):
-            current_app.logger.warning(
-                f"{version_code}/{target}: Delete outdated job build"
-            )
-            try:
-                request_hash = request_hash.decode()
-                registry.remove(request_hash, delete_job=True)
-                rmtree(current_app.config["STORE_PATH"] / request_hash)
-
-            except NoSuchJobError:
-                current_app.logger.warning("Job was already deleted")
-        r.delete(f"builds:{version_code}:{target}")
-
     r.set(
         f"revision:{version}:{target}",
         metadata["version_code"],
