@@ -15,6 +15,8 @@ from asu.common import get_redis, is_modified
 
 bp = Blueprint("janitor", __name__)
 
+session = requests.Session()
+
 
 def update_set(key: str, *data: list):
     pipeline = get_redis().pipeline(True)
@@ -28,7 +30,7 @@ def update_branch(branch):
     targets = list(
         filter(
             lambda t: not t.startswith("."),
-            requests.get(
+            session.get(
                 current_app.config["UPSTREAM_URL"]
                 + f"/{version_path}/targets?json-targets"
             ).json(),
@@ -94,7 +96,7 @@ def update_target_profiles(branch: dict, version: str, target: str) -> str:
         + f"/{version_path}/targets/{target}/profiles.json"
     )
 
-    req = requests.get(profiles_url)
+    req = session.get(profiles_url)
 
     if req.status_code != 200:
         current_app.logger.warning("Couldn't download %s", profiles_url)
