@@ -2,10 +2,11 @@ version: "2"
 
 services:
   server:
-    image: "aparcar/asu-server:latest"
+    image: "aparcar/asu-server:0.7.20"
     environment:
       - REDIS_HOST=redis
     volumes:
+      - "./asu-service/asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
       - "./asu-service:/home/build/asu/"
     ports:
       - "8000"
@@ -13,20 +14,22 @@ services:
       - redis
 
   janitor:
-    image: "aparcar/asu-server:latest"
+    image: "aparcar/asu-server:0.7.20"
     environment:
       - FLASK_APP=asu.asu
       - FLASK_DEBUG=1
       - REDIS_HOST=redis
     command: flask janitor update
     volumes:
+      - "./asu-service/asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
       - "./asu-service:/home/build/asu/"
     depends_on:
       - redis
 
   worker:
-    image: "aparcar/asu-worker:latest"
+    image: "aparcar/asu-worker:0.7.20"
     volumes:
+      - "./asu-service/asu/:/home/build/.local/lib/python3.9/site-packages/asu/"
       - "./asu-service/public/:/home/build/asu/public/"
     depends_on:
       - redis
