@@ -338,11 +338,11 @@ def build(req: dict):
     job.meta["build_cmd"] = build_cmd
     job.save_meta()
 
-    if image_build.returncode:
-        report_error("Error while building firmware. See stdout/stderr")
-
     if "is too big" in image_build.stderr:
         report_error("Selected packages exceed device storage")
+
+    if image_build.returncode:
+        report_error("Error while building firmware. See stdout/stderr")
 
     kernel_build_dir_run = subprocess.run(
         ["make", "val.KERNEL_BUILD_DIR"],
