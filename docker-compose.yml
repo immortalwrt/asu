@@ -30,6 +30,7 @@ services:
     image: "aparcar/asu-worker:0.7.20"
     volumes:
       - "./asu-service/asu/:/home/build/.local/lib/python3.9/site-packages/asu/"
+      - "./asu-service/misc/zstd:/usr/bin/zstd"
       - "./asu-service/public/:/home/build/asu/public/"
     depends_on:
       - redis
