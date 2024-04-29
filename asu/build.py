@@ -69,7 +69,7 @@ def build(req: dict):
             report_error("Bad signature of ImageBuilder archive")
 
         ib_search = re.search(
-            r"^(.{64}) \*([a-z]+-imagebuilder-.+?\.Linux-x86_64\.tar\.xz)$",
+            r"^(.{64}) \*([a-z]+-imagebuilder-.+?\.Linux-x86_64\.tar\.(xz|zst))$",
             sums_file.read_text(),
             re.MULTILINE,
         )
@@ -77,7 +77,7 @@ def build(req: dict):
         if not ib_search:
             report_error("Missing Checksum")
 
-        ib_hash, ib_archive = ib_search.groups()
+        ib_hash, ib_archive, _ = ib_search.groups()
 
         job.meta["imagebuilder_status"] = "download_imagebuilder"
         job.save_meta()
