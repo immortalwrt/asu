@@ -1,17 +1,16 @@
-version: "2"
-
 services:
   server:
     image: "aparcar/asu-server:0.7.20"
     environment:
       - REDIS_HOST=redis
     volumes:
-      - "./asu-service/asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
-      - "./asu-service:/home/build/asu/"
+      - "./asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
+      - "./:/home/build/asu/"
     ports:
       - "8000"
     depends_on:
       - redis
+    restart: always
 
   janitor:
     image: "aparcar/asu-server:0.7.20"
@@ -21,27 +20,52 @@ services:
       - REDIS_HOST=redis
     command: flask janitor update
     volumes:
-      - "./asu-service/asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
-      - "./asu-service:/home/build/asu/"
+      - "./asu/:/home/build/.local/lib/python3.10/site-packages/asu/"
+      - "./:/home/build/asu/"
     depends_on:
       - redis
+    restart: always
 
   worker:
     image: "aparcar/asu-worker:0.7.20"
     volumes:
-      - "./asu-service/asu/:/home/build/.local/lib/python3.9/site-packages/asu/"
-      - "./asu-service/misc/zstd:/usr/bin/zstd"
-      - "./asu-service/public/:/home/build/asu/public/"
+      - "./asu/:/home/build/.local/lib/python3.9/site-packages/asu/"
+      - "./misc/zstd:/usr/bin/zstd"
+      - "./pubkey:/home/build/asu/pubkey"
+      - "./seckey:/home/build/asu/seckey"
+      - "./newcert:/home/build/asu/newcert"
+      - "./cache/:/home/build/asu/cache/"
+      - "./public/:/home/build/asu/public/"
     depends_on:
       - redis
+    restart: always
 
   redis:
     image: "redis:alpine"
+    restart: always
 
   webserver:
     image: caddy
     volumes:
       - "./misc/Caddyfile:/etc/caddy/Caddyfile"
-      - "./asu-service:/site/"
+      - "./public:/site/"
     ports:
       - "80:80"
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090"
+    volumes:
+      - "./misc/prometheus.yml:/etc/prometheus/prometheus.yml"
+    restart: always
+
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./misc/grafana.ini:/etc/grafana/grafana.ini"
+      - "./grafana/:/var/lib/grafana/"
+    restart: always
