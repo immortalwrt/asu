@@ -1,8 +1,5 @@
 version: "3"
 
-volumes:
-  redis:
-
 services:
   server:
     image: "asu:latest"
@@ -25,11 +22,11 @@ services:
     restart: always
     command: rqworker --with-scheduler
     environment:
-      - CONTAINER_HOST=unix://$CONTAINER_SOCK
+      - CONTAINER_HOST=unix:///run/user/1000/podman/podman.sock
       - REDIS_URL=redis://redis/
     volumes:
-      - $PUBLIC_PATH:$PUBLIC_PATH:rw
-      - $CONTAINER_SOCK:$CONTAINER_SOCK:rw
+      - "./public:/app/public:rw"
+      - "/run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock:rw"
     depends_on:
       - redis
 
@@ -37,4 +34,4 @@ services:
     image: "docker.io/redis/redis-stack-server"
     restart: always
     volumes:
-      - redis:/data/:rw
+      - "./redis:/data/:rw"
