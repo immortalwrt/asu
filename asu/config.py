@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     public_path: Path = Path.cwd() / "public"
     json_path: Path = public_path / "json" / "v1"
     redis_url: str = "redis://localhost:6379"
-    upstream_url: str = "https://downloads.openwrt.org"
+    upstream_url: str = "https://downloads.immortalwrt.org"
     allow_defaults: bool = False
     async_queue: bool = True
     branches_file: Union[str, Path, None] = None
@@ -30,25 +30,27 @@ class Settings(BaseSettings):
                 {
                     "source": "luci-app-opkg",
                     "target": "luci-app-package-manager",
-                    "revision": 27897,
+                    "revision": 32211,
                 },
-                {"source": "auc", "target": "owut", "revision": 26792},
+                {"source": "ipv6helper", "revision": 31953, "mandatory": True},
+                {"source": "auc", "target": "owut", "revision": 30931},
+                {"source": "kmod-nft-nat6", "revision": 20282, "mandatory": True},
+                {"source": "firewall", "target": "firewall4", "revision": 18611},
+            ],
+        },
+        "24.10": {
+            "path": "releases/{version}",
+            "enabled": False,
+            "path_packages": "DEPRECATED",
+            "branch_off_rev": 32308,
+            "package_changes": [
                 {
-                    "source": "libustream-wolfssl",
-                    "target": "libustream-mbedtls",
-                    "revision": 21994,
+                    "source": "luci-app-opkg",
+                    "target": "luci-app-package-manager",
+                    "revision": 32211,
                 },
-                {"source": "px5g-wolfssl", "target": "px5g-mbedtls", "revision": 21994},
-                {
-                    "source": "wpad-basic-wolfssl",
-                    "target": "wpad-basic-mbedtls",
-                    "revision": 21994,
-                },
-                {
-                    "source": "libustream-wolfssl",
-                    "target": "libustream-mbedtls",
-                    "revision": 21994,
-                },
+                {"source": "ipv6helper", "revision": 31953, "mandatory": True},
+                {"source": "auc", "target": "owut", "revision": 30931},
                 {"source": "kmod-nft-nat6", "revision": 20282, "mandatory": True},
                 {"source": "firewall", "target": "firewall4", "revision": 18611},
             ],
@@ -57,45 +59,14 @@ class Settings(BaseSettings):
             "path": "releases/{version}",
             "enabled": True,
             "path_packages": "DEPRECATED",
-            "branch_off_rev": 23069,
-            "package_changes": [
-                {
-                    "source": "libustream-wolfssl",
-                    "target": "libustream-mbedtls",
-                    "revision": 21994,
-                },
-                {"source": "px5g-wolfssl", "target": "px5g-mbedtls", "revision": 21994},
-                {
-                    "source": "wpad-basic-wolfssl",
-                    "target": "wpad-basic-mbedtls",
-                    "revision": 21994,
-                },
-                {
-                    "source": "libustream-wolfssl",
-                    "target": "libustream-mbedtls",
-                    "revision": 21994,
-                },
-                {"source": "kmod-nft-nat6", "revision": 19160, "mandatory": True},
-                {"source": "firewall", "target": "firewall4", "revision": 18611},
-            ],
-        },
-        "22.03": {
-            "path": "releases/{version}",
-            "enabled": True,
-            "path_packages": "DEPRECATED",
-            "branch_off_rev": 19160,
+            "branch_off_rev": 26397,
             "package_changes": [
                 {"source": "kmod-nft-nat6", "revision": 19160, "mandatory": True},
                 {"source": "firewall", "target": "firewall4", "revision": 18611},
             ],
-        },
-        "21.02": {
-            "path": "releases/{version}",
-            "enabled": True,
-            "path_packages": "DEPRECATED",
         },
     }
-    server_stats: str = "/stats"
+    server_stats: str = ""
     log_level: str = "INFO"
     squid_cache: bool = False
 
