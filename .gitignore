@@ -4,6 +4,7 @@ site/
 redis/
 public/
 squid/
+caddy/
 poetry.lock
 json/
 instance/
