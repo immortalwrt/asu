@@ -42,6 +42,7 @@ class Settings(BaseSettings):
 
     public_path: Path = Path.cwd() / "public"
     redis_url: str = "redis://localhost:6379"
+    feeds_url: str = ""
     upstream_url: str = "https://downloads.immortalwrt.org"
     allow_defaults: bool = False
     async_queue: bool = True
