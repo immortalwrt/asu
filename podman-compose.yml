@@ -53,3 +53,14 @@ services:
     restart: always
     volumes:
       - "./redis:/data/:rw"
+
+  webserver:
+    image: caddy
+    volumes:
+      - "./misc/Caddyfile:/etc/caddy/Caddyfile"
+      - "./public/:/site/:ro,rshared"
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - server
