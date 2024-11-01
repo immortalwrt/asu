@@ -66,21 +66,41 @@ def build(build_request: BuildRequest, job=None):
 
     image = f"{settings.base_container}:{build_request.target.replace('/', '-')}-{container_version_tag}"
 
-    if build_request.version.lower().endswith("snapshot"):
+    if settings.squid_cache:
+        image = "localhost/imagebuilder:setup"
         environment.update(
             {
                 "TARGET": build_request.target,
+                "UPSTREAM_URL": settings.upstream_url,
                 "VERSION_PATH": get_branch(build_request.version)
                 .get("path", "")
                 .replace("{version}", build_request.version),
             }
         )
-        if settings.squid_cache:
-            environment.update(
+        mounts.append(
+            {
+                "type": "bind",
+                "source": str(settings.misc_path / "setup.sh"),
+                "target": "/misc/setup.sh",
+                "read_only": True,
+            },
+        )
+        mounts.append(
+            {
+                "type": "bind",
+                "source": str(settings.cache_path),
+                "target": "/cache",
+                "read_only": False,
+            },
+        )
+        if settings.keys_path:
+            mounts.append(
                 {
-                    "use_proxy": "on",
-                    "http_proxy": "http://127.0.0.1:3128",
-                }
+                    "type": "bind",
+                    "source": str(settings.keys_path),
+                    "target": "/keys",
+                    "read_only": True,
+                },
             )
 
     job.meta["imagebuilder_status"] = "container_setup"
@@ -167,13 +187,26 @@ def build(build_request: BuildRequest, job=None):
     )
     container.start()
 
-    if is_snapshot_build(build_request.version):
-        log.info("Running setup.sh for ImageBuilder")
+    if settings.squid_cache:
+        log.debug("Running setup.sh for ImageBuilder")
         returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
-            container, ["sh", "setup.sh"]
+            container, ["bash", "/misc/setup.sh"]
         )
         if returncode:
             report_error(job, "Could not set up ImageBuilder")
+
+    if settings.keys_path:
+        log.debug("Copying signing keys...")
+        returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+            container,
+            [
+                "cp",
+                "/keys/key-build",
+                "/keys/key-build.pub",
+                "/keys/key-build.ucert",
+                "/builder/",
+            ]
+        )
 
     returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
         container, ["make", "info"]
