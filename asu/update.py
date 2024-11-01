@@ -160,7 +160,7 @@ def update_meta_json():
         "upstream_url": settings.upstream_url,
         "server": {
             "version": __version__,
-            "contact": "mail@aparcar.org",
+            "contact": "cnsztl@immortalwrt.org",
             "allow_defaults": settings.allow_defaults,
             "repository_allow_list": settings.repository_allow_list,
         },
