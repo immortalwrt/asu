@@ -244,6 +244,20 @@ def _build(build_request: BuildRequest, job=None):
             ]
         )
 
+    if settings.feeds_url:
+        log.debug("Replacing default repositories url...")
+
+        returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+            container,
+            [
+                "sed",
+                "-i",
+                f"s|{settings.feeds_url}|{settings.upstream_url}|g",
+                "repositories",
+                "repositories.conf"
+            ],
+        )
+
     returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
         container, ["make", "info"]
     )
