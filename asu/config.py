@@ -86,11 +86,14 @@ class Settings(BaseSettings):
     }
     server_stats: str = ""
     log_level: str = "INFO"
-    squid_cache: bool = False
+    squid_cache: bool = True
     build_ttl: str = "3h"
     build_defaults_ttl: str = "30m"
     build_failure_ttl: str = "10m"
     max_pending_jobs: int = 200
 
+    cache_path: Path = Path.cwd() / "cache"
+    misc_path: Path = Path.cwd() / "misc"
+    keys_path: Path = Path.cwd() / "keys"
 
 settings = Settings()

@@ -54,15 +54,6 @@ services:
   #   depends_on:
   #     - redis
   #
-  # Optionally add a Squid cache container when using `SQUID_CACHE`
-  # squid:
-  #   image: "docker.io/ubuntu/squid:latest"
-  #   restart: unless-stopped
-  #   ports:
-  #     - "127.0.0.1:3128:3128"
-  #   volumes:
-  #     - ".squid.conf:/etc/squid/conf.d/snippet.conf:ro"
-  #     - "./squid-data/:/var/spool/squid/:rw"
 
   # Optionally add a Grafana container when using `SERVER_STATS`
   # grafana:
