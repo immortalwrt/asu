@@ -157,7 +157,7 @@ def update_meta_json():
     overview = {
         "latest": latest,
         "branches": branches,
-        "upstream_url": settings.upstream_url,
+        "upstream_url": settings.feeds_url or settings.upstream_url,
         "server": {
             "version": __version__,
             "contact": "cnsztl@immortalwrt.org",
