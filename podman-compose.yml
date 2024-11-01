@@ -38,6 +38,17 @@ services:
     volumes:
       - ./redis-data:/data/:rw
 
+  webserver:
+    image: caddy
+    volumes:
+      - ./misc/Caddyfile:/etc/caddy/Caddyfile:ro
+      - $PUBLIC_PATH:/site/:ro,rshared
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - server
+
   # Optionally add more workers
   # worker2:
   #   image: "asu:latest"
