@@ -216,9 +216,9 @@ def api_v1_build_post():
     job = get_queue().fetch_job(request_hash)
     response = {}
     status = 200
-    result_ttl = "7d"
+    result_ttl = "24h"
     if req.get("defaults"):
-        result_ttl = "1h"
+        result_ttl = "24h"
     failure_ttl = "12h"
 
     if "client" in req:
