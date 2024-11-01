@@ -1,55 +1,53 @@
 services:
   server:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
-      context: .
+      context: ./
       dockerfile: Containerfile
-    restart: unless-stopped
+    restart: always
     command: uvicorn --host 0.0.0.0 asu.main:app
     env_file: .env
     environment:
-      REDIS_URL: "redis://redis:6379/0"
+      - REDIS_URL=redis://redis:6379/0
     volumes:
-      - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
+      - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro,rshared
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
       - redis
 
   worker:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
-      context: .
+      context: ./
       dockerfile: Containerfile
-    restart: unless-stopped
+    restart: always
     command: rqworker --logging_level INFO
     env_file: .env
     environment:
-      REDIS_URL: "redis://redis:6379/0"
+      REDIS_URL=redis://redis:6379/0
     volumes:
-      - $PUBLIC_PATH:$PUBLIC_PATH:rw
+      - $PUBLIC_PATH:$PUBLIC_PATH:rw,rshared
       - $CONTAINER_SOCKET_PATH:$CONTAINER_SOCKET_PATH:rw
     depends_on:
       - redis
 
   redis:
     image: "docker.io/redis/redis-stack-server"
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./redis-data:/data/:rw
-    ports:
-      - "127.0.0.1:6379:6379"
 
   # Optionally add more workers
   # worker2:
-  #   image: "docker.io/openwrt/asu:latest"
-  #   restart: unless-stopped
+  #   image: "asu:latest"
+  #   restart: always
   #   command: rqworker --logging_level INFO
   #   env_file: .env
   #   environment:
-  #    REDIS_URL: "redis://redis:6379/0"
+  #    REDIS_URL=redis://redis:6379/0
   #   volumes:
-  #     - $PUBLIC_PATH:$PUBLIC_PATH:rw
+  #     - $PUBLIC_PATH:$PUBLIC_PATH:rw,rshared
   #     - $CONTAINER_SOCKET_PATH:$CONTAINER_SOCKET_PATH:rw
   #   depends_on:
   #     - redis
