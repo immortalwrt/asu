@@ -165,7 +165,7 @@ def json_v1_overview():
         "upstream_url": settings.upstream_url,
         "server": {
             "version": __version__,
-            "contact": "mail@aparcar.org",
+            "contact": "cnsztl@immortalwrt.org",
             "allow_defaults": settings.allow_defaults,
             "repository_allow_list": settings.repository_allow_list,
             "max_custom_rootfs_size_mb": settings.max_custom_rootfs_size_mb,
