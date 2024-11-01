@@ -3,23 +3,23 @@
     <head>
         <meta charset="utf-8" />
 
-        <title>OpenWrt Sysupgrade Server</title>
+        <title>ImmortalWrt Sysupgrade Server</title>
         <link href="/static/style.css" rel="stylesheet" />
     </head>
     <body>
         <header>
             <div>
-                <img src="/static/logo.png" alt="OpenWrt Firmware logo" />
+                <img src="/static/banner.png" alt="ImmortalWrt Firmware logo" />
             </div>
         </header>
         <div class="container">
-            <h1>OpenWrt Sysupgrade Server ({{ version }})</h1>
+            <h1>ImmortalWrt Sysupgrade Server ({{ version }})</h1>
 
             <div class="grid-container">
                 <div class="grid-item">
                     <h2>About the Sysupgrade Server</h2>
                     <p>
-                        This server listens for requests to build custom OpenWrt
+                        This server listens for requests to build custom ImmortalWrt
                         sysupgrade images. It starts an ImageBuilder process for
                         the specified target, incorporates any requested
                         packages, and returns that image to the requestor. The
@@ -32,7 +32,7 @@
                         >
                         Please
                         <a
-                            href="https://github.com/openwrt/asu/issues"
+                            href="https://github.com/immortalwrt/asu/issues"
                             target="_blank"
                             >report issues!</a
                         >
@@ -41,7 +41,7 @@
                         <b>How to use this server:</b> These are clients 
 						that can request a new image from the Sysupgrade Server:
                     </p>
-                    <ul>For OpenWrt 24.10.xx
+                    <ul>For ImmortalWrt 24.10.xx
                         <li>
                             <a
                                 href="https://github.com/openwrt/asu#luci-app"
@@ -61,7 +61,7 @@
                             <code>opkg install owut</code>
                         </li>
 					</ul>
-					<ul>For OpenWrt 25.12.xx
+					<ul>For ImmortalWrt 25.12.xx
                         <li>
                             <a
                                 href="https://github.com/openwrt/asu#luci-app"
@@ -85,8 +85,8 @@
                         <b>NOTE:</b> Following the release of 
 						<a href="https://openwrt.org/releases/25.12/notes-25.12.0#general_changes"
 						target="_blank">
-						OpenWrt 25.12</a>,
-						OpenWrt has transitioned from the traditional
+						ImmortalWrt 25.12</a>,
+						ImmortalWrt has transitioned from the traditional
 						<code>opkg</code> package manager
 						to <code>apk</code> (Alpine Package Keeper) and includes <code>
 						luci-app-attendedsysupgrade</code> by default in fresh installs.
