@@ -27,17 +27,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 package_changes_list = [
     {"source": "firewall", "target": "firewall4", "revision": 18611},
     {"source": "kmod-nft-nat6", "revision": 20282, "mandatory": True},
-    {"source": "libustream-wolfssl", "target": "libustream-mbedtls", "revision": 21994},
-    {"source": "px5g-wolfssl", "target": "px5g-mbedtls", "revision": 21994},
-    {"source": "wpad-basic-wolfssl", "target": "wpad-basic-mbedtls", "revision": 21994},
-    {"source": "luci-app-diag-core", "revision": 25984, "mandatory": True},
-    {"source": "auc", "target": "owut", "revision": 26792},
+    {"source": "luci-app-diag-core", "revision": 28021, "mandatory": True},
+    {"source": "auc", "target": "owut", "revision": 30931},
+    {"source": "ipv6helper", "revision": 31953, "mandatory": True},
     {
         "source": "luci-app-opkg",
         "target": "luci-app-package-manager",
-        "revision": 27897,
+        "revision": 32211,
     },
-    {"source": "opkg", "target": "apk-mbedtls", "revision": 28056},
+    {"source": "opkg", "target": "apk-openssl", "revision": 32382},
 ]
 
 
@@ -65,7 +63,7 @@ class Settings(BaseSettings):
 
     public_path: Path = Path.cwd() / "public"
     redis_url: str = "redis://localhost:6379"
-    upstream_url: str = "https://downloads.openwrt.org"
+    upstream_url: str = "https://downloads.immortalwrt.org"
     allow_defaults: bool = False
     async_queue: bool = True
     branches_file: Union[str, Path, None] = None
@@ -83,10 +81,8 @@ class Settings(BaseSettings):
             "path_packages": "DEPRECATED",
             "package_changes": package_changes(),
         },
-        "24.10": release(27990),
-        "23.05": release(23069),
-        "22.03": release(19160),
-        "21.02": release(15812, enabled=True),  # Enabled for now...
+        "24.10": release(32308),
+        "23.05": release(26397),
     }
     server_stats: str = ""
     log_level: str = "INFO"
