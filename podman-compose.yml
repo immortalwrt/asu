@@ -1,78 +1,55 @@
 version: "2"
 
-volumes:
-  redis:
-  # grafana-storage:
-
 services:
   server:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
-      context: .
+      context: ./
       dockerfile: Containerfile
-    restart: unless-stopped
-    command: uvicorn --host 0.0.0.0 asu.main:app
-    env_file: .env
-    volumes:
-      - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
+    restart: always
+    environment:
+      - REDIS_URL=redis://redis/
     ports:
       - "127.0.0.1:8000:8000"
+    volumes:
+      - "./public:/app/public:ro,rshared"
     depends_on:
       - redis
 
   worker:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
-      context: .
+      context: ./
       dockerfile: Containerfile
-    restart: unless-stopped
+    restart: always
     command: rqworker --logging_level INFO
-    env_file: .env
+    environment:
+      - CONTAINER_HOST=unix:///run/user/1000/podman/podman.sock
+      - REDIS_URL=redis://redis/
     volumes:
-      - $PUBLIC_PATH:$PUBLIC_PATH:rw
-      - $CONTAINER_SOCK:$CONTAINER_SOCK:rw
+      - "./public:/app/public:rw,rshared"
+      - "/run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock:rw"
     depends_on:
       - redis
 
   # worker2:
-  #   image: "docker.io/openwrt/asu:latest"
-  #   restart: unless-stopped
+  #   image: "asu:latest"
+  #   build:
+  #     context: ./
+  #     dockerfile: Containerfile
+  #   restart: always
   #   command: rqworker --logging_level INFO
-  #   env_file: .env
+  #   environment:
+  #     - CONTAINER_HOST=unix:///run/user/1000/podman/podman.sock
+  #     - REDIS_URL=redis://redis/
   #   volumes:
-  #     - $PUBLIC_PATH:$PUBLIC_PATH:rw
-  #     - $CONTAINER_SOCK:$CONTAINER_SOCK:rw
+  #     - "./public:/app/public:rw,rshared"
+  #     - "/run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock:rw"
   #   depends_on:
   #     - redis
 
   redis:
     image: "docker.io/redis/redis-stack-server"
-    restart: unless-stopped
+    restart: always
     volumes:
-      - redis:/data/:rw
-    ports:
-      - "127.0.0.1:6379:6379"
-
-  # squid:
-  #   image: "docker.io/ubuntu/squid:latest"
-  #   restart: unless-stopped
-  #   ports:
-  #     - "127.0.0.1:3128:3128"
-  #   volumes:
-  #     - ".squid.conf:/etc/squid/conf.d/snippet.conf:ro"
-  #     - "./squid/:/var/spool/squid/:rw"
-
-  # grafana:
-  #   image: docker.io/grafana/grafana-oss
-  #   container_name: grafana
-  #   restart: unless-stopped
-  #   ports:
-  #     - "127.0.0.1:3000:3000"
-  #   depends_on:
-  #     - redis
-  #   environment:
-  #     GF_SERVER_DOMAIN: sysupgrade.openwrt.org
-  #     GF_SERVER_ROOT_URL: https://sysupgrade.openwrt.org/stats/
-  #     GF_SERVER_SERVE_FROM_SUB_PATH: "true"
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
+      - "./redis:/data/:rw"
