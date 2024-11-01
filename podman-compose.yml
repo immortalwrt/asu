@@ -25,7 +25,7 @@ services:
       - CONTAINER_HOST=unix:///run/user/1000/podman/podman.sock
       - REDIS_URL=redis://redis/
     volumes:
-      - "./public:/app/public:rw"
+      - "./public:/app/public:rw,rshared"
       - "/run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock:rw"
     depends_on:
       - redis
@@ -35,3 +35,14 @@ services:
     restart: always
     volumes:
       - "./redis:/data/:rw"
+
+  webserver:
+    image: caddy
+    volumes:
+      - "./misc/Caddyfile:/etc/caddy/Caddyfile"
+      - "./public/:/site/:ro,rshared"
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - server
