@@ -164,36 +164,65 @@ def _build(build_request: BuildRequest, job=None):
         f"Container version: {container_version_tag} (requested {build_request.version})"
     )
 
+    mounts: list[dict[str, Union[str, bool]]] = []
     environment: dict[str, str] = {}
 
     image = f"{settings.base_container}:{build_request.target.replace('/', '-')}-{container_version_tag}"
 
-    if is_snapshot_build(build_request.version):
+    if settings.local_cache:
+        image = "localhost/imagebuilder:setup"
         environment.update(
             {
                 "TARGET": build_request.target,
+                "UPSTREAM_URL": settings.upstream_url,
                 "VERSION_PATH": get_branch(build_request.version)
                 .get("path", "")
                 .replace("{version}", build_request.version),
             }
         )
+        mounts.append(
+            {
+                "type": "bind",
+                "source": str(settings.misc_path / "setup.sh"),
+                "target": "/misc/setup.sh",
+                "read_only": True,
+            },
+        )
+        mounts.append(
+            {
+                "type": "bind",
+                "source": str(settings.cache_path),
+                "target": "/cache",
+                "read_only": False,
+            },
+        )
+        if settings.keys_path:
+            mounts.append(
+                {
+                    "type": "bind",
+                    "source": str(settings.keys_path),
+                    "target": "/keys",
+                    "read_only": True,
+                },
+            )
+    else:
+        mounts.append({"type": "tmpfs", "target": f"/builder/{request_hash}"})
 
     job.meta["imagebuilder_status"] = "container_setup"
     job.save_meta()
 
-    log.info(f"Pulling {image}...")
-    try:
-        podman.images.pull(image)
-    except errors.ImageNotFound:
-        report_error(
-            job,
-            f"Image not found: {image}. If this version was just released, please try again in a few hours as it may take some time to become fully available.",
-        )
-    log.info(f"Pulling {image}... done")
-
-    mounts: list[dict[str, Union[str, bool]]] = [
-        {"type": "tmpfs", "target": f"/builder/{request_hash}"},
-    ]
+    if settings.local_cache:
+        log.info(f"Using local ImageBuilder setup image {image}")
+    else:
+        log.info(f"Pulling {image}...")
+        try:
+            podman.images.pull(image)
+        except errors.ImageNotFound:
+            report_error(
+                job,
+                f"Image not found: {image}. If this version was just released, please try again in a few hours as it may take some time to become fully available.",
+            )
+        log.info(f"Pulling {image}... done")
 
     container = podman.containers.create(
         image,
@@ -210,13 +239,33 @@ def _build(build_request: BuildRequest, job=None):
     try:
         container.start()
 
-        if is_snapshot_build(build_request.version):
+        if settings.local_cache:
+            log.debug("Running setup.sh for ImageBuilder")
+            returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+                container, ["bash", "/misc/setup.sh"]
+            )
+            if returncode:
+                report_error(job, f"Could not set up ImageBuilder ({returncode=})")
+        elif is_snapshot_build(build_request.version):
             log.info("Running setup.sh for ImageBuilder")
             returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
                 container, ["sh", "setup.sh"]
             )
             if returncode:
                 report_error(job, f"Could not set up ImageBuilder ({returncode=})")
+
+        if settings.keys_path:
+            log.debug("Copying signing keys...")
+            returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+                container,
+                [
+                    "cp",
+                    "/keys/key-build",
+                    "/keys/key-build.pub",
+                    "/keys/key-build.ucert",
+                    "/builder/",
+                ],
+            )
 
         # Detect the package manager only when something needs it: custom
         # repositories (inject_files) or cache URL rewriting below.

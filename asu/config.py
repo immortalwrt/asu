@@ -112,5 +112,9 @@ class Settings(BaseSettings):
     max_pending_jobs: int = 200
     job_timeout: str = "10m"
 
+    local_cache: bool = False
+    cache_path: Path = ""
+    misc_path: Path = ""
+    keys_path: Path = ""
 
 settings = Settings()
