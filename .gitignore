@@ -4,6 +4,7 @@ site/
 redis/
 public/
 squid/
+caddy/
 json/
 instance/
 htmlcov/
