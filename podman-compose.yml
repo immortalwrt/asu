@@ -38,6 +38,18 @@ services:
     volumes:
       - ./redis-data:/data/:rw
 
+  webserver:
+    image: caddy
+    volumes:
+      - ./caddy/log/:/var/log/caddy/:rw
+      - ./misc/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./public:/site/:ro,rshared
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - server
+
   # Optional: caching proxy for upstream package downloads.
   # Enable with: podman-compose -f podman-compose.yml -f podman-compose.cache.yml up -d
   # and set cache_url = "http://cache" in asu.toml.
