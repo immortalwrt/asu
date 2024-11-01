@@ -265,6 +265,26 @@ def _build(build_request: BuildRequest, job=None):
     packages_hash: str = get_packages_hash(manifest.keys())
     log.debug(f"Packages Hash: {packages_hash}")
 
+    if build_request.target.startswith("x86/"):
+        returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+            container,
+            [
+                "sed",
+                "-e",
+                "s|CONFIG_ISO_IMAGES=y|\\# CONFIG_ISO_IMAGES is not set|g",
+                "-e",
+                "s|CONFIG_QCOW2_IMAGES=y|\\# CONFIG_QCOW2_IMAGES is not set|g",
+                "-e",
+                "s|CONFIG_VDI_IMAGES=y|\\# CONFIG_VDI_IMAGES is not set|g",
+                "-e",
+                "s|CONFIG_VMDK_IMAGES=y|\\# CONFIG_VMDK_IMAGES is not set|g",
+                "-e",
+                "s|CONFIG_VHDX_IMAGES=y|\\# CONFIG_VHDX_IMAGES is not set|g",
+                "-i",
+                ".config",
+            ],
+        )
+
     job.meta["build_cmd"] = [
         "make",
         "image",
