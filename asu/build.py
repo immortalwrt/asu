@@ -275,6 +275,17 @@ def _build(build_request: BuildRequest, job=None):
 
         inject_files(container, build_request, job, apk_mode=apk_mode)
 
+        if settings.feeds_url:
+            log.debug("Replacing default repositories url...")
+
+            repo_file = (
+                "repositories" if _detect_apk_mode(container) else "repositories.conf"
+            )
+            run_cmd(
+                container,
+                ["sed", "-i", f"s|{settings.feeds_url}|{settings.upstream_url}|g", repo_file],
+            )
+
         # If a caching proxy is configured, rewrite repository URLs
         # from https://host/path to http://cache/host/path
         if settings.cache_url:
