@@ -1,40 +1,40 @@
 services:
   server:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
       context: .
       dockerfile: Containerfile
-    restart: unless-stopped
+    restart: always
     command: uv run uvicorn --host 0.0.0.0 --reload --reload-include asu.toml asu.main:app
     environment:
-      REDIS_URL: "redis://redis:6379/0"
+      - REDIS_URL=redis://redis:6379/0
     volumes:
-      - ./asu.toml:/app/asu.toml:ro
-      - ./public/store:/public/store:ro
+      - ./asu.toml:/app/asu.toml:ro,rshared
+      - ./public/store:/public/store:ro,rshared
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
       - redis
 
   worker:
-    image: "docker.io/openwrt/asu:latest"
+    image: "asu:latest"
     build:
       context: .
       dockerfile: Containerfile
-    restart: unless-stopped
+    restart: always
     command: uv run rqworker --logging_level INFO
     environment:
-      REDIS_URL: "redis://redis:6379/0"
+      - REDIS_URL=redis://redis:6379/0
     volumes:
-      - ./asu.toml:/app/asu.toml:ro
-      - ./public:/public:rw
+      - ./asu.toml:/app/asu.toml:ro,rshared
+      - ./public:/public:rw,rshared
       - ./podman.sock:/var/podman.sock:rw
     depends_on:
       - redis
 
   redis:
     image: "docker.io/redis/redis-stack-server"
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./redis-data:/data/:rw
 
