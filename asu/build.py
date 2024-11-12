@@ -249,7 +249,12 @@ def build(req: dict):
             print(manifest_run.stderr)
             report_error("Impossible package selection")
 
-    manifest = dict(map(lambda pv: pv.split(" - "), manifest_run.stdout.splitlines()))
+    if " - " in manifest_run.stdout:
+        separator = " - " # OPKG format
+    else:
+        separator = " " # APK format
+
+    manifest = dict(map(lambda pv: pv.split(separator), manifest_run.stdout.splitlines()))
 
     for package, version in req.get("packages_versions", {}).items():
         if package not in manifest:
