@@ -24,14 +24,38 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 14,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "XwiupDP7k"
+        "uid": "v2JGYcf4z"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 13,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Server statistics over 24h\n\nPlease reach out if you need any other stats than shown here, this is currently just a gimmick.\n\nThe raw data is available under [`/metrics`](http://sysupgrade.kyarucloud.moe/metrics)",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.1.1",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "v2JGYcf4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -43,8 +67,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -53,8 +76,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 12,
-        "x": 0,
+        "w": 6,
+        "x": 12,
         "y": 0
       },
       "id": 4,
@@ -72,12 +95,12 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.2",
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "XwiupDP7k"
+            "uid": "v2JGYcf4z"
           },
           "exemplar": true,
           "expr": "sum(increase(builds_total[$__range]))",
@@ -86,13 +109,13 @@
           "refId": "A"
         }
       ],
-      "title": "Builds Total",
+      "title": "Builds",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "XwiupDP7k"
+        "uid": "v2JGYcf4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -100,12 +123,13 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -119,8 +143,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 0
       },
       "id": 10,
@@ -138,12 +162,12 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.2",
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "XwiupDP7k"
+            "uid": "v2JGYcf4z"
           },
           "exemplar": true,
           "expr": "increase(cache_hits[$__range]) / (increase(cache_hits[$__range]) + increase(cache_misses[$__range]))",
@@ -158,7 +182,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "XwiupDP7k"
+        "uid": "v2JGYcf4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -188,6 +212,7 @@
         "legend": {
           "displayMode": "table",
           "placement": "right",
+          "showLegend": true,
           "values": [
             "percent"
           ]
@@ -209,7 +234,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "XwiupDP7k"
+            "uid": "v2JGYcf4z"
           },
           "exemplar": true,
           "expr": "sum by (profile) (increase(builds_total[$__range])) > 1",
@@ -219,14 +244,14 @@
           "refId": "A"
         }
       ],
-      "title": "Builds by profile",
+      "title": "Most requested profiles",
       "transformations": [],
       "type": "piechart"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "XwiupDP7k"
+        "uid": "v2JGYcf4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -256,6 +281,7 @@
         "legend": {
           "displayMode": "table",
           "placement": "right",
+          "showLegend": true,
           "values": [
             "percent"
           ]
@@ -273,12 +299,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "XwiupDP7k"
+            "uid": "v2JGYcf4z"
           },
           "exemplar": true,
           "expr": "sum by (version) (increase(builds_total[$__range]))",
@@ -289,23 +315,190 @@
       ],
       "title": "Builds Total by Release",
       "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "v2JGYcf4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "v2JGYcf4z"
+          },
+          "exemplar": true,
+          "expr": "sum by (target) (increase(builds_total[$__range])) > 1",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{profile}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Most requested targets",
+      "transformations": [],
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "v2JGYcf4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "v2JGYcf4z"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum by (name, version) (increase(clients_total[$__range])) > 1",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}} - {{version}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Request per client total",
+      "transformations": [],
+      "type": "timeseries"
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 36,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Attended Sysupgrade Server",
   "uid": "LM1HE4E7k",
-  "version": 3,
+  "version": 18,
   "weekStart": ""
 }
