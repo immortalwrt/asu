@@ -216,6 +216,8 @@ def _build(build_request: BuildRequest, job=None):
                 "/keys/key-build",
                 "/keys/key-build.pub",
                 "/keys/key-build.ucert",
+                "/keys/private-key.pem",
+                "/keys/public-key.pem",
                 "/builder/",
             ]
         )
