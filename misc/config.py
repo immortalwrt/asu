@@ -35,7 +35,7 @@ MAPPING_ABI = {"libubus20191227": "libubus"}
 # BRANCHES = {}
 
 # what branches.yml file to load
-# BRANCHES_FILE = "./branches.yml"
+BRANCHES_FILE = Path.cwd() / "branches.yml"
 
 # where to downlaod the images from
 # UPSTREAM_PATH = "https://downloads.immortalwrt.org"
