@@ -44,4 +44,4 @@ services:
       - "./misc/Caddyfile:/etc/caddy/Caddyfile"
       - "./asu-service:/site/"
     ports:
-      - "8000:80"
+      - "80:80"
