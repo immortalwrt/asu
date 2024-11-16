@@ -111,6 +111,8 @@ def build(req: dict):
             )
 
         repos_path = cache_workdir / "repositories.conf"
+        if not repos_path.is_file():
+           repos_path = cache_workdir / "repositories"
         repos = repos_path.read_text()
 
         if req['repos_url']:
