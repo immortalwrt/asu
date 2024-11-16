@@ -212,13 +212,18 @@ def build(build_request: BuildRequest, job=None):
 
     if settings.feeds_url:
         log.debug("Replacing default repositories url...")
+        if build_request.version.lower().endswith("snapshot"):
+            repositories_path = "repositories"
+        else:
+            repositories_path = "repositories.conf"
+
         returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
             container,
             [
                 "sed",
                 "-i",
                 f"s|{settings.feeds_url}|{settings.upstream_url}|g",
-                "repositories.conf",
+                repositories_path,
             ],
         )
 
