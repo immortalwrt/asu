@@ -56,6 +56,25 @@ immediately without rebuilding.
 
 ### Active servers
 
+ImmortalWrt servers:
+
+> [!NOTE]
+> Official server using ImageBuilder published on [ImmortalWrt
+> Downloads](downloads.immortalwrt.org).
+
+- [sysupgrade.kyarucloud.moe](https://sysupgrade.kyarucloud.moe)
+
+- [sysupgrade.immortalwrt.org](https://sysupgrade.immortalwrt.org)
+
+> [!NOTE]
+> Unofficial servers.
+
+- [sysupgrade.r2s.site](https://sysupgrade.r2s.site)
+
+<br />
+
+OpenWrt servers:
+
 > [!NOTE]
 > Official server using ImageBuilder published on [OpenWrt
 > Downloads](https://downloads.openwrt.org).
@@ -65,7 +84,6 @@ immediately without rebuilding.
 > [!NOTE]
 > Unofficial servers, may run modified ImageBuilder
 
-- [ImmortalWrt](https://sysupgrade.kyarucloud.moe)
 - [LibreMesh](https://sysupgrade.libremesh.org)
 - [sysupgrade.guerra24.net](https://sysupgrade.guerra24.net)
 - [sysupgrade.antennine.org](https://sysupgrade.antennine.org)
